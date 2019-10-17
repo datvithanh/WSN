@@ -96,7 +96,7 @@ def run_ga(inp: WsnInput, logger=None):
 
 if __name__ == '__main__':
     logger = init_log()
-    path = '/home/manhpp/d/Code/WSN/data/test.json'
+    path = './data/test.json'
     logger.info("prepare input data from path %s" % path)
     inp = WsnInput.from_file(path)
     logger.info("num generation: %s" % N_GENS)

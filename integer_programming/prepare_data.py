@@ -25,5 +25,5 @@ def prepare(path):
 
 
 if __name__ == '__main__':
-    a = prepare('/home/manhpp/Documents/Code/WSN/data/ga-dem1_r25_1.in')
+    a = prepare('./data/ga-dem1_r25_1.in')
     print(a)

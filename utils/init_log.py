@@ -3,7 +3,7 @@ import logging.config
 
 
 def init_log():
-    logging.config.fileConfig('/home/manhpp/d/Code/WSN/utils/logging.conf')
+    logging.config.fileConfig('./utils/logging.conf')
     logger = logging.getLogger(__name__)
     logger.info("Custom logging started.")
     logger.info("Complete!")

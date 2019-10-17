@@ -95,5 +95,5 @@ class WsnInput:
 
 
 if __name__ == "__main__":
-    inp = WsnInput.from_file('/home/manhpp/Documents/Code/WSN/data/ga-dem1_r25_1.in')
+    inp = WsnInput.from_file('./data/ga-dem1_r25_1.in')
     print(inp.relays[0])
