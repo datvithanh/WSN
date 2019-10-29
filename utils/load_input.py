@@ -2,7 +2,7 @@ import json
 from DS.position import distance
 from DS.vertex import Vertex
 from utils.init_log import init_log
-
+from collections import defaultdict
 
 class WsnInput:
     def __init__(self, _max_hop=20, _num_of_relay_positions=40, _num_of_relays=20, _num_of_sensors=40,
@@ -16,6 +16,11 @@ class WsnInput:
         self.radius = _radius
         self.BS = _bs
         self.all_vertex = _all_vertex
+
+        # for layered graph
+        self.static_relay_loss = None
+        self.dynamic_relay_loss = None
+        self.sensor_loss = None
 
     @classmethod
     def from_file(cls, path):
@@ -85,6 +90,26 @@ class WsnInput:
         with open(file_path, "wt") as f:
             fstr = json.dumps(d, indent=4)
             f.write(fstr)
+    
+    def calculate_loss(self):
+        sensor_loss = defaultdict(lambda: float('inf'))
+        static_relay_loss = {}
+        dynamic_relay_loss = {}
+        R = self.radius
+        BS = self.BS
+        for sn in self.sensors:
+            for rn in self.relays:
+                if distance(sn, rn) <= 2 * R:
+                    sensor_loss[(sn, rn)] = WusnConstants.k_bit * (
+                            WusnConstants.e_tx + WusnConstants.e_fs * math.pow(distance(sn, rn), 2))
+
+        for rn in self.relays:
+            dynamic_relay_loss[rn] = WusnConstants.k_bit * (WusnConstants.e_rx + WusnConstants.e_da)
+            static_relay_loss[rn] = WusnConstants.k_bit * WusnConstants.e_mp * math.pow(distance(rn, BS), 4)
+
+        self.static_relay_loss = static_relay_loss
+        self.dynamic_relay_loss = dynamic_relay_loss
+        self.sensor_loss = sensor_loss
 
     def __hash__(self):
         return hash((self.max_hop, self.num_of_relay_positions, self.num_of_relays, self.num_of_sensors, self.radius,
